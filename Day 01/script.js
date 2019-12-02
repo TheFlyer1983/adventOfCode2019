@@ -51,6 +51,8 @@ function recursionFuel(mass){
     } else {
       subtract2 = 0;
     }
+  } else if (roundDown < 0) {
+    subtract2 = 0
   } else {
     subtract2 = roundDown
   }

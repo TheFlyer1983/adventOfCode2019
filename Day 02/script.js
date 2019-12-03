@@ -56,4 +56,7 @@ loadFile()
   .then((data) => {
     console.log('Day Two Part One Answer:', dayTwoPartOne(data, 12,2));
     console.log('Day Two Part Two Answer:', dayTwoPartTwo(data));
+  })
+  .catch((err) =>{
+    console.log(err);
   });

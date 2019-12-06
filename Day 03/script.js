@@ -9,7 +9,7 @@ function loadFile(){
 }
 
 function dayThreePartOne(data){
-  const inputArray = data.toString().split('\r\n');
+  const inputArray = data.toString().split('\n');
   const lineOne = inputArray[0].split(',');
   const lineTwo = inputArray[1].split(',');
   // const lineOne = ['R8','U5','L5','D3']; //Sample JourneyOne
@@ -27,7 +27,6 @@ function dayThreePartOne(data){
 
   for (let i = 0; i < lineOne.length; i++) {
     if (lineOne[i].substr(0, 1) === 'R') {
-      // coords.y = coords.y + Number(lineOne[i].substr(1));
       for (let j = 0; j <= Number(lineOne[i].substr(1)); j++) {
         if (j === 0) {
           coords.y = coords.y;
@@ -35,20 +34,13 @@ function dayThreePartOne(data){
           coords.y = coords.y + 1;
           journeyOne.push({...coords});  
         }
-        // journeyOne.push(coords.x + coords.y);
-        
       }
-      // journeyOne.push(coords.x + coords.y);
     } else if (lineOne[i].substr(0, 1) === 'L') {
-      // coords.y = coords.y - Number(lineOne[i].substr(1));
       for (let j = Number(lineOne[i].substr(1)); j > 0; j--) {
         coords.y = coords.y - 1;
-        // journeyOne.push(coords.x + coords.y);
         journeyOne.push({...coords});   
       }
-      // journeyOne.push(coords.x + coords.y);
     } else if (lineOne[i].substr(0, 1) === 'U') {
-      // coords.x = coords.x + Number(lineOne[i].substr(1));
       for (let j = 0; j <= Number(lineOne[i].substr(1)); j++) {
         if (j === 0) {
           coords.x = coords.x;
@@ -56,23 +48,16 @@ function dayThreePartOne(data){
           coords.x = coords.x + 1;
           journeyOne.push({...coords});
         }
-        // journeyOne.push(coords.x + coords.y);
-             
       }
-      // journeyOne.push(coords.x + coords.y);
     } else if (lineOne[i].substr(0, 1) === 'D') {
-      // coords.x = coords.x - Number(lineOne[i].substr(1));
       for (let j = Number(lineOne[i].substr(1)); j > 0; j--) {
         coords.x = coords.x - 1;
-        // journeyOne.push(coords.x + coords.y);
         journeyOne.push({...coords});  
       }
-      // journeyOne.push(coords.x + coords.y);
     } else {
       console.log(`You have encountered an error!\nThe First character of the instruction isn't one of the letters R, L, U or D.`);
       break;
     }
-    // journeyOne.push(coords.x + coords.y);
   }
 
   coords.x = 0;
@@ -88,16 +73,11 @@ function dayThreePartOne(data){
           journeyTwo.push({...coords});  
         }
       }
-      // coords.y = coords.y + Number(lineTwo[i].substr(1));
-      // journeyTwo.push(coords.x + coords.y);
     } else if (lineTwo[i].substr(0, 1) === 'L') {
       for (let j = Number(lineTwo[i].substr(1)); j > 0; j--) {
         coords.y = coords.y - 1;
-        // journeyOne.push(coords.x + coords.y);
         journeyTwo.push({...coords}); 
       }
-      // coords.y = coords.y - Number(lineTwo[i].substr(1));
-      // journeyTwo.push(coords.x + coords.y);
     } else if (lineTwo[i].substr(0, 1) === 'U') {
       for (let j = 0; j <= Number(lineTwo[i].substr(1)); j++) {
         if (j === 0) {
@@ -107,52 +87,52 @@ function dayThreePartOne(data){
           journeyTwo.push({...coords});  
         }        
       }
-      // coords.x = coords.x + Number(lineTwo[i].substr(1));
-      // journeyTwo.push(coords.x + coords.y);
     } else if (lineTwo[i].substr(0, 1) === 'D') {
       for (let j = Number(lineTwo[i].substr(1)); j > 0; j--) {
         coords.x = coords.x - 1;
-        // journeyOne.push(coords.x + coords.y);
         journeyTwo.push({...coords});
       }
-      // coords.x = coords.x - Number(lineTwo[i].substr(1));
-      // journeyTwo.push(coords.x + coords.y);
     } else {
       console.log(`You have encountered an error!\nThe First character of the instruction isn't one of the letters R, L, U or D.`);
       break;
     }
-    // journeyTwo.push(coords.x + coords.y);
   }
 
-  for (let i = 0; i < journeyOne.length; i++) {
-    for (let j = 0; j < journeyTwo.length; j++) {
-      // console.log('Journey 1', journeyOne[i]);
-      // console.log('Journey 2' ,journeyTwo[j]);
-      let matchOne = Object.is(journeyOne[i].x, journeyTwo[j].x);
-      let matchTwo = Object.is(journeyOne[i].y, journeyTwo[j].y);
+  journeyOne.forEach((e, count) => {
+    journeyTwo.forEach((i) => {
+      let matchOne = Object.is(e.x, i.x);
+      let matchTwo = Object.is(e.y, i.y);
       if ((matchOne === true) && (matchTwo === true)) {
-        crossingPoints.push(journeyTwo[j].x + journeyTwo[j].y);
+        if (i.x < 0) {
+          i.x = i.x * -1;
+        }
+        if (i.y < 0) {
+          i.y = i.y * -1;
+        }
+        crossingPoints.push(i.x + i.y);
       }
-      
-    }
-  }
-  console.log(crossingPoints);
+      return crossingPoints;
+    })
+  })
+  
   const answer = sort(crossingPoints);
   return answer[0];
 }
 
 function sort(arr) {
   const sorted = [...arr];
-  sorted.sort((a,b) => a.ranking > b.ranking ? -1 : 1)
+  sorted.sort((a,b) => a > b ? 1 : -1)
   return sorted;
 }
 
 loadFile()
   .then((data) => {
     // console.log(data.toString().split('\r\n'));
-    console.log(dayThreePartOne(data));
+    console.log('Day Three Part One Answer: ',dayThreePartOne(data));
     // console.log('Day Two Part Two Answer:', dayTwoPartTwo(data));
   })
   .catch((err) =>{
     console.log(err);
   });
+
+  // console.log(dayThreePartOne());
